@@ -21,7 +21,7 @@ class Question extends Model
 
     public function answers()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Answer::class)->orderByDesc('votes_count');
     }
 
     public function setTitleAttribute($value)

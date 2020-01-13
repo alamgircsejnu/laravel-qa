@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Kaishiyoku\HtmlPurifier\HtmlPurifier;
 
 class Answer extends Model
 {
@@ -51,6 +52,18 @@ class Answer extends Model
     public function isBest()
     {
         return $this->id === $this->question->best_answer_id;
+    }
+
+    public function getBodyHtmlAttribute()
+    {
+        $purifier = new HtmlPurifier();
+
+        return $purifier->purify($this->bodyHtml());
+    }
+
+    private function bodyHtml()
+    {
+        return \Parsedown::instance()->text($this->body);
     }
 
 }

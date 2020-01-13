@@ -13,7 +13,7 @@
                         'model' => $answer,
                         ])
                         <div class="media-body">
-                            {!! $answer->body !!}
+                            {!! $answer->body_html !!}
 
                             <div class="row mt-4">
                                 <div class="col-4 mt-4">

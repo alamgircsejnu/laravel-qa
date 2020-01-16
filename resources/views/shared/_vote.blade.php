@@ -1,13 +1,13 @@
 @if($model instanceof App\Question)
-   @php
-   $name = 'question';
-   $firstURISegment = 'questions';
-   @endphp
-   @elseif($model instanceof App\Answer)
-   @php
-   $name = 'answer';
-   $firstURISegment = 'answers';
-   @endphp
+    @php
+        $name = 'question';
+        $firstURISegment = 'questions';
+    @endphp
+@elseif($model instanceof App\Answer)
+    @php
+        $name = 'answer';
+        $firstURISegment = 'answers';
+    @endphp
 @endif
 
 @php
@@ -42,10 +42,8 @@
 
     @if($model instanceof App\Question)
         <favorite :question="{{ $model }}"></favorite>
-        @elseif($model instanceof App\Answer)
-        @include('shared._accept', [
-        'model' => $model
-        ])
+    @elseif($model instanceof App\Answer)
+        <accept :answer="{{ $model }}"></accept>
     @endif
 
 </div>

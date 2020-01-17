@@ -35,10 +35,13 @@
                 </div>
             </div>
         </div>
-        @include('answers._index', [
-        'answers' => $question->answers,
-        'answersCount' => $question->answers_count
-        ])
+        <answers :answers="{{ $question->answers }}" :count="{{ $question->answers_count }}"></answers>
         @include('answers._create')
     </div>
 @endsection
+{{--<script>--}}
+    {{--import Answers from "../../js/components/Answers";--}}
+    {{--export default {--}}
+        {{--components: {Answers}--}}
+    {{--}--}}
+{{--</script>--}}

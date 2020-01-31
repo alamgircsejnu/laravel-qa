@@ -15,8 +15,10 @@
                 <div class="row mt-4">
                     <div class="col-4 mt-4">
                         <div class="ml-auto">
-                            <a v-if="authorize('modify', answer)" @click.prevent="edit" class="btn btn-sm btn-outline-info">Edit</a>
-                            <button v-if="authorize('modify', answer)" @click="destroy" class="btn btn-sm btn-outline-danger">Delete
+                            <a v-if="authorize('modify', answer)" @click.prevent="edit"
+                               class="btn btn-sm btn-outline-info">Edit</a>
+                            <button v-if="authorize('modify', answer)" @click="destroy"
+                                    class="btn btn-sm btn-outline-danger">Delete
                             </button>
                         </div>
                     </div>
@@ -31,8 +33,16 @@
 </template>
 
 <script>
+    import Vote from './Vote.vue';
+    import UserInfo from './UserInfo.vue';
+    import modification from '../mixins/modification';
+
     export default {
         props: ["answer"],
+
+        components: {Vote, UserInfo},
+
+        mixins: [modification],
 
         data() {
             return {
@@ -46,61 +56,26 @@
         },
 
         methods: {
-            edit() {
+            setEditCache() {
                 this.beforeEditCache = this.body;
-                this.editing = true;
             },
-            cancel() {
+
+            restoreFromCache() {
                 this.body = this.beforeEditCache;
-                this.editing = false;
             },
-            update() {
-                axios.patch(this.endpoint, {
+
+            payload() {
+                return {
                     body: this.body
-                })
-                    .then(res => {
-                        this.editing = false;
-                        this.bodyHtml = res.data.body_html;
-                        this.$toast.success(res.data.message, 'Success', { timeout: 3000 });
-                    })
-                    .catch(err => {
-                        this.$toast.error(res.response.data.message, 'Error', { timeout: 3000 });
-                    })
+                }
             },
 
-            destroy() {
-                this.$toast.question('Are you sure about that?', 'Confirm', {
-                    timeout: 20000,
-                    close: false,
-                    overlay: true,
-                    displayMode: 'once',
-                    id: 'question',
-                    zindex: 999,
-                    title: 'Hey',
-                    position: 'center',
-                    buttons: [
-                        ['<button><b>YES</b></button>', (instance, toast) => {
-                            axios.delete(this.endpoint)
-                                .then(res => {
-                                    this.$emit('deleted');
-                                });
-                            instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
-
-                        }, true],
-                        ['<button>NO</button>', function (instance, toast) {
-
-                            instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
-
-                        }],
-                    ],
-                    onClosing: function (instance, toast, closedBy) {
-                        console.info('Closing | closedBy: ' + closedBy);
-                    },
-                    onClosed: function (instance, toast, closedBy) {
-                        console.info('Closed | closedBy: ' + closedBy);
-                    }
-                });
-
+            delete() {
+                axios.delete(this.endpoint)
+                    .then(res => {
+                        this.$toast.success(res.data.message, "Success", {timeout: 2000})
+                        this.$emit('deleted');
+                    });
             }
         },
 
